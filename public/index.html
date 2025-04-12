@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Futuristic LED Control</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom futuristic styles */
+        .toggle-bg {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+        }
+        .toggle-dot {
+            background: radial-gradient(circle, #06b6d4, #0284c7);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
+        }
+        .futuristic-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col gap-4 items-center justify-center bg-gradient-to-r from-gray-700 via-gray-800 to-black">
+
+    <span class="text-gray-200 font-semibold">YOUR DEVICES</span>
+
+    <!-- DEVICE LIST -->
+
+    <div class="flex items-center justify-center">
+        <!-- Device item OFF -->
+        <div onclick="setDeviceStatus('on')" id="OFF" class="flex flex-col items-center text-center justify-center gap-2 rounded-lg p-8 bg-white">
+            <img src="images/idea.png" class="w-20 h-20" alt="Bulb">
+            <span id="device-status" class="font-bold text-sm">OFF</span>
+        </div>
+
+        <!-- Device item ON -->
+        <div onclick="setDeviceStatus('off')" id="ON" class="flex flex-col items-center text-center justify-center gap-2 rounded-lg p-8 bg-black shadow-[0_0_75px_10px_rgba(255,255,255,0.4)]">
+            <img src="images/idea.png" class="w-20 h-20 invert" alt="Bulb">
+            <span class="font-bold text-sm text-white">ON</span>
+        </div>
+    </div>
+
+<script>
+    setDeviceStatus('off');
+    // Function to send the LED control command to the Node.js server
+    function sendCommand(state) {
+        fetch(`/led/${state}`)
+            .then(response => response.text())
+            .then(text => {
+                //document.getElementById('result').innerText = text;
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('result').innerText = 'Error sending command';
+            });
+    }
+
+    function setDeviceStatus(state) {
+        console.log('clicked', state)
+        if (state === 'off') {
+            document.getElementById('OFF').style.display = 'block';
+            document.getElementById('ON').style.display = 'none';
+            sendCommand(state);
+        }
+        if (state === 'on') {
+            document.getElementById('OFF').style.display = 'none';
+            document.getElementById('ON').style.display = 'block';
+            sendCommand(state);
+        }
+    }
+</script>
+</body>
+</html>
